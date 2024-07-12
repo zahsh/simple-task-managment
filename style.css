@@ -129,3 +129,17 @@ h2 , h1{
 .alert.alert-warning {
     background-color:rgba(255, 235, 55, 0.349) ;
 }
+
+.details p {
+    font-size: 1.2rem;
+    margin: 1.8rem 0;
+    color: rgba(97, 95, 95, 0.801);
+}
+
+.details span {
+    color: rgb(10, 189, 120);
+}
+
+.btn.done {
+    background-color: rgb(10, 147, 189);
+}

@@ -123,7 +123,7 @@ function addTask($category) {
 
 function showTasks() {
     global $connect;
-    $sql = "SELECT * FROM task";
+    $sql = "SELECT * FROM task ORDER BY id ASC";
     $result = $connect->query($sql);
     $result->execute();
     if($result->rowCount()) {
@@ -133,3 +133,76 @@ function showTasks() {
     }
 }
 
+function showTask($id) {
+    global $connect;
+    $sql = "SELECT * FROM task WHERE id = ?";
+    $result = $connect->prepare($sql);
+    $result->bindValue(1,$id);
+    $result->execute();
+    if($result->rowCount()) {
+        return $result->fetch(PDO::FETCH_ASSOC);
+    } else {
+        return false;
+    }
+}
+
+function editTask($category) {
+    global $connect;
+    if(isset($_POST['edittask']) && isset($_GET['editid'])) {
+        if(!empty($_POST['name']) && !empty($_POST['content']) && in_array($_POST['category'],array_column($category,'name'))) {
+            $sql = 'UPDATE task SET name = ? , category = ? , content = ? WHERE id = ?';
+            $result = $connect->prepare($sql);
+            $result->bindValue(1,$_POST['name']);
+            $result->bindValue(2,$_POST['category']);
+            $result->bindValue(3,$_POST['content']);
+            $result->bindValue(4,$_GET['editid']);
+            $result->execute();
+            if($result->rowCount()) {
+                header("location:index.php?edit=success");
+                return $result;
+            } else {
+                return false;
+            }
+        } 
+    }
+}
+
+function deleteTask() {
+    global $connect;
+    if(isset($_GET['deleteid'])) {
+        $sql = "DELETE FROM task WHERE id = ?";
+        $result = $connect->prepare($sql);
+        $result->bindValue(1,$_GET['deleteid']);
+        $result->execute();
+        if($result->rowCount()) {
+            header("location:index.php?delete=success");
+            return $result;
+        } else {
+            return false;
+        }
+    }
+}
+
+function doneTask() {
+    global $connect;
+    if(isset($_GET['doneid'])) {
+        $sql = "UPDATE task SET status = ? WHERE id = ?";
+        $result = $connect->prepare($sql);
+        $result->bindValue(1,1);
+        $result->bindValue(2,$_GET['doneid']);
+        $result->execute();
+        header("location:index.php");
+    }
+}
+
+function undoneTask() {
+    global $connect;
+    if(isset($_GET['undoneid'])) {
+        $sql = "UPDATE task SET status = ? WHERE id = ?";
+        $result = $connect->prepare($sql);
+        $result->bindValue(1,0);
+        $result->bindValue(2,$_GET['undoneid']);
+        $result->execute();
+        header("location:index.php");
+    }
+}

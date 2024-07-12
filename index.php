@@ -1,12 +1,15 @@
 <?php require_once "includes/aside.php" ?>
 <?php 
     $showTasks =  showTasks();
+    deleteTask();
+    doneTask();
+    undoneTask();
 ?>
     <main>
-        <h1>tasks</h1>
-        <?php if(isset($_GET['add'])): ?>
-            <div class="alert alert-success">Task added successfully</div>
+         <?php if(isset($_GET['edit'])): ?>
+            <div class="alert alert-success">task changed</div>
         <?php endif ?>
+        <h1>tasks</h1>
         <table>
             <thead>
                 <tr>
@@ -26,10 +29,14 @@
                             <td><?= $task['id'] ?></td>
                             <td><?= $task['name'] ?></td>
                             <td><?= $task['category'] ?></td>
-                            <td>done</td>
-                            <td><a href="#" class="btn det">details</a></td>
-                            <td><a href="#" class="btn edi">edit</a></td>
-                            <td><a href="#" class="btn del">delete</a></td>
+                            <?php if($task['status'] == 0) : ?>
+                                <td><a href="index.php?doneid=<?= $task['id'] ?>" class="btn done">done</a></td>
+                            <?php else :  ?>
+                                <td><a href="index.php?undoneid=<?= $task['id'] ?>" class="btn done">undone</a></td>
+                            <?php endif ?>
+                            <td><a href="details.php?detailid=<?= $task['id'] ?>" class="btn det">details</a></td>
+                            <td><a href="edittask.php?editid=<?= $task['id'] ?>" class="btn edi">edit</a></td>
+                            <td><a href="index.php?deleteid=<?= $task['id'] ?>" class="btn del">delete</a></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
